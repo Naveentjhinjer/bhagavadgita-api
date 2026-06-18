@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class VerseService(
-    private val repository: VerseRepository
+    private val verseRepository: VerseRepository
 ) {
 
-    fun getAllVerses(): List<Verse> {
-        return repository.findAll()
+    fun getVersesByChapter(
+        chapterNumber: Int
+    ): List<Verse> {
+        return verseRepository
+            .findByChapterNumberOrderByVerseNumber(chapterNumber)
     }
 }
