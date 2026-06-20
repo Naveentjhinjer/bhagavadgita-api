@@ -1,6 +1,7 @@
 package com.technk.bhagavadgita.exception
 
 import com.technk.bhagavadgita.model.ApiError
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -8,6 +9,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+
+    private val logger =
+        LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
 
     @ExceptionHandler(ResourceNotFoundException::class)
     fun handleNotFound(
@@ -17,8 +21,8 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(
                 ApiError(
-                    success = false,
-                    message = ex.message ?: "Not Found"
+                    false,
+                    ex.message ?: "Resource not found"
                 )
             )
     }
@@ -28,11 +32,13 @@ class GlobalExceptionHandler {
         ex: Exception
     ): ResponseEntity<ApiError> {
 
+        logger.error("Unhandled exception", ex)
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(
                 ApiError(
-                    success = false,
-                    message = ex.message ?: "Internal Server Error"
+                    false,
+                    "Something went wrong"
                 )
             )
     }
