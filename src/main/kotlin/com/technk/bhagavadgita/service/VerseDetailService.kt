@@ -1,6 +1,7 @@
 package com.technk.bhagavadgita.service
 
 import com.technk.bhagavadgita.entity.VerseDetail
+import com.technk.bhagavadgita.exception.ResourceNotFoundException
 import com.technk.bhagavadgita.repository.VerseDetailRepository
 import org.springframework.stereotype.Service
 
@@ -12,11 +13,13 @@ class VerseDetailService(
     fun getVerseDetail(
         chapterNumber: Int,
         verseNumber: Int
-    ): VerseDetail? {
+    ): VerseDetail {
 
         return repository.findByChapterNumberAndVerseNumber(
             chapterNumber,
             verseNumber
+        ) ?: throw ResourceNotFoundException(
+            "Verse $verseNumber not found in chapter $chapterNumber"
         )
     }
 }
